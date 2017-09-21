@@ -8,3 +8,13 @@ The project focused on building pixel-level labels for satelite imagery of the a
 *Note, the files currently posted are aportion of a work in progress, but are fairly representative of such* 
 
 You can also see more on this project on my personal Blog, and likely soon on the DigitalGlobe Company Blog and possibly elsewhere!
+
+Here's a couple of teaser images from the working model:
+
+<img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif">
+
+
+<img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_AtJBwz_3_3_1800.gif">
+
+
+<img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_MHY2RT_1800.gif">
