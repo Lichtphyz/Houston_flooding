@@ -5,7 +5,7 @@ The repo contains a series of notebooks which made up the core steps of a 3-week
 
 The project focused on building pixel-level labels for satelite imagery of the areas affected by Huricane Harvey, using them to train a Deep-Learinging Segmentation model (U-Net), and using the model to make predictions across large-scale image footprints.  Step 03 in particular is a semi-supervised data labeling routine.  Step 04 is missing because it was cut from the final product, and would better be applied AFTER predicted maps are made.
 
-*Note, the files currently posted are a portion of a work in progress, but are fairly representative of such* 
+*Note, the files currently posted are a portion of a work in progress, but are fairly representative of such.  I have not gone back and cleaned up my code* 
 
 You can also see more on this project on my personal Blog, and likely soon on the DigitalGlobe Company Blog and possibly elsewhere!
 
