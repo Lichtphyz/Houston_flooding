@@ -6,11 +6,15 @@
 
 The repo contains a series of notebooks which made up the core steps of a 3-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.  It is also quite likely that I will be continuing to work on this project from time to time, so check back to see if I have added anything.
 
-## Background
+## Background:
+This project was started as part of the [Metis/DigitalGlobe Data Challenge](http://deepcore.io/2017/06/06/Metis_Project.html) but when DigitalGlobe released a substanial dataset of the areas just hit by Hurricane Harvey (through it's [Open Data Program](https://www.digitalglobe.com/opendata)) the project quickly evolved into something more immediately relevent, but with data in less-pre-proceed state than the SpaceNet dataset I had been planning on working with.
 
+## Goal:  
+A goal was set to built a model which (once trained) could quickly examine satillite imagry of an area, and create a 'mask' labeling each pixel as either flooded or not (or assign a likelihood of being flooded).  This is an [image segmentation](https://en.wikipedia.org/wiki/Image_segmentation) problem.
 
-## Goal
+Additionally, to be useful the model will really need to be able to predict over a wide area to be able to generate the type of large-scale flood extent maps which would be useful to disaster response or recover efforts.
 
+IMAGE SEGMENTATION EXAMPLE PIC HERE
 
 ## Image Data
 
