@@ -1,9 +1,28 @@
 # Flood Water Detection 
-## with A Semi-Supervised U-Net
+### with A Semi-Supervised U-Net
 
-The repo contains a series of notebooks which made up the core steps of a 3-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.
+The repo contains a series of notebooks which made up the core steps of a 3-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.
 
-You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000)
+## Background
+
+
+## Goal
+
+
+## Image Data
+
+
+## Building a Training Set
+
+
+
+## Baseline Model
+
+As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such this model is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. labeled as flooding.
+
+IMAGE HERE OF AUC CURVE AND PREDICTION
+
+## U-Net Model
 
 The project focused on building pixel-level labels for satelite imagery of the areas affected by Huricane Harvey, using them to train a Deep-Learinging Segmentation model (U-Net), and using the model to make predictions across large-scale image footprints.
 
