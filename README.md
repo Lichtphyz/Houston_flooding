@@ -17,21 +17,43 @@ Additionally, to be useful the model will really need to be able to predict over
 IMAGE SEGMENTATION EXAMPLE PIC HERE
 
 ## Image Data
-The post-storm satillite images I used for this project were primarily taken on October 31st, 2017 and can be found on DigitalGlobe's Open Data Program page for [Hurricane Harvey](https://www.digitalglobe.com/opendata/hurricane-harvey/post-event).  As time has progressed most images have been added to the website, so what is posted now is significantly more than what was available when I started, though the first images released were also amoung the best.  Each .geotiff file is 1.2 Gb in size, covers an area about 10x10km, are 20000x20000 pixels across in uncompressed 8-bit 3-color (Digital Globe internally used 8-color images, but those are rarely released to the public).
+The post-storm satillite images I used for this project were primarily taken on October 31st, 2017 and can be found on DigitalGlobe's Open Data Program page for [Hurricane Harvey](https://www.digitalglobe.com/opendata/hurricane-harvey/post-event).  As time has progressed more images have been added to the website, so what is there now is significantly more than what was available when I started; though the first images released were also amoung the best.  Each .geotiff file is 1.2 Gb in size, covers an area roughly 10x10km, are 20000x20000 pixels across in uncompressed 8-bit 3-color (Digital Globe internally uses Multispectral 8-band images, but those are rarely released to the public).
+
+EXAMPLE IMAGES, PERHAPS QGIS SCREENSHOT OF THE EXTENT
+
+AND/OR LARGE AREA BEFORE/AFTER PICS
 
 ## Building a Training Set
+### Problem:  No Labeled Training Data!
 
+FARSIDE IMAGE HERE?  NOT TOO BIG
 
+The closest thing to a set of "ground truth" labels for the Houston Area post-flooding was a RADARSAT-2 (radar) difference map flagging the areas most changed after the storm.  Unfortunately, the resolution of this map is several times lower than the DigitalGlobe data, and more importantly it has quite a large number of false positives (such as construction sites, deforestation, large warehouses, etc. where there was a lot of change in ground-cover) and missed many areas of flooding a well.
+
+This map is not sufficiently accurate or precise to use to train my segmentation model.  But it would allow me to restrict a search for flooded ground imagery to a much smaller subset of the imaged area (about 1/30th of the whole set, the majority of which were flooded).  
+
+### Solution:  Unsupervised clustering of image pixels with Human cluster verification/adjustment
+#### A.K.A. Semi-Supervised Learning
+
+Due to the relatively uniform appearance of floodwater, the potential existed for using unsupervised segmentation/clustering techniques to identify flooded pixels in an image.  I choose DBScan has my clustering algorithm of choice, because it is not biased towards any particular number of clusters, and I could tune it by setting a distance in color-space.  This works very well when an image is mostly flooded, and all the floodwater is roughtly the same color.  The tricky part is when there are multiple colors of floodwater near eachother, and when non-water objects are present with similar colors to the flooding.  A routine was written to examine color ratios and select the most common cluster which wasn't too white/grey/black or too dark green.  Unfortunately, this type of simple algorithm isn't smart enough to avoid labeling dead grass, rooftops, dirty roads, and many other surfaces as flooded if they happen to be a bit close to the color of Texas floodwater (and thanks to using local minerals for roofing tiles, many of them are), it is also not smart enough to know if there are multiple colors of floodwater in the same image.
+
+EXAMPLE PIC OF SOME HARD PICTURES TO SEGMENT
+
+**The solution to this problem I devised was to have a human being supervise the clustering algorithm**, and select the correct clusters manually when the algorithim didn't get it right.  I wrote a Jupyter notebook (step 03) specifically for the review of DBScan clustering, and the selection of new clusters as needed (about half the time).  Approximately 2000 flooding candiate tiles were labeled this way, about 60% of which we were able to get a good usable "ground truth" mask from (including ~10% tiles with no apparent flooding).  The rest contained clouds, poor clustering (such as selecting rooftops as floodwater), had extensive construction, or someother issue with the image quality.
+
+Images can now be labeled at a rate of about 200 per hour.  The resulting masks are highly accurate (the lack of true ground-truth for comparison prevents me to quantifyting it exactly, but here are a few examples of the process:
+
+EXAMPLE PICS OF THE PROCESS AT WORK, PROBABLY THE ONES I PUT IN THE GOOGLE DOC
 
 ## Baseline Model
 
-As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such this model is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. labeled as flooding.
+As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. flasely labeled as flooding.
 
 IMAGE HERE OF AUC CURVE AND PREDICTION
 
 ## U-Net Model
 
-The project focused on building pixel-level labels for satelite imagery of the areas affected by Huricane Harvey, using them to train a Deep-Learinging Segmentation model (U-Net), and using the model to make predictions across large-scale image footprints.
+While not the only possibility, a U-net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  It took some experimentation with different data standardization and feature possibilities
 
 
 
