@@ -54,13 +54,17 @@ Due to the relatively uniform appearance of floodwater, the potential existed fo
 
 The unsupervised DBScan model works very well when an image is mostly flooded, and all the floodwater is roughtly the same color.  The tricky part is when there are multiple colors of floodwater near eachother, and when non-water objects are present with similar colors to the flooding.  A routine was written to examine color ratios and select the most common cluster which wasn't too white/grey/black or too dark green.  Unfortunately, this type of simple algorithm isn't smart enough to avoid labeling dead grass, rooftops, dirty roads, and many other surfaces as flooded if they happen to be a bit close to the color of Texas floodwater (and thanks to using local minerals for roofing tiles, many of them are), it is also not smart enough to know if there are multiple colors of floodwater in the same image.
 
-EXAMPLE PIC OF SOME HARD PICTURES TO SEGMENT
+<p align="center">
+<img src="images/HardOne.png" alt="sometime it doesn't work so well">
+</p>
 
-**The solution to this problem I devised was to have a human being supervise the clustering algorithm**, and select the correct clusters manually when the algorithim didn't get it right.  I wrote a Jupyter notebook (step 03) specifically for the review of DBScan clustering, and the selection of new clusters as needed (about half the time).  Approximately 2000 flooding candiate tiles were labeled this way, about 60% of which we were able to get a good usable "ground truth" mask from (including ~10% tiles with no apparent flooding).  The rest contained clouds, poor clustering (such as selecting rooftops as floodwater), had extensive construction, or someother issue with the image quality.
+**The solution to this problem I devised was to have a human being supervise the clustering algorithm**, and select the correct clusters manually when the algorithim didn't get it right.  I wrote a Jupyter notebook (step 03) specifically for the review of DBScan clustering, and the selection of new clusters as needed (about half the time).  Approximately 2000 flooding candiate tiles were labeled this way, about 60% of which we were able to get a good usable "ground truth" mask from (including ~10% tiles with no apparent flooding).  The rest contained clouds, poor clustering (such as selecting rooftops as floodwater), had extensive construction, or someother issue with the image quality.  Here's a couple of nice examples of manually selected clusters:
 
 Images can now be labeled at a rate of approximately 200 per hour.  The resulting masks are highly accurate (the lack of true ground-truth for comparison prevents me to quantifyting their precision, but here are a few examples of the process so you can judge for yourself:
 
-EXAMPLE PICS OF THE PROCESS AT WORK, PROBABLY THE ONES I PUT IN THE GOOGLE DOC
+<p align="center">
+<img src="images/Screen Shot 2017-09-28 at 2.29.00 PM.png" alt="example1" width="400"> <img src="images/Screen Shot 2017-09-28 at 1.48.25 PM.png" alt="example2" width="400">
+</p>
 
 Images where the DBSCAN clustering did a poor job are rejected for (possible) revision later.
 
@@ -68,18 +72,30 @@ Images where the DBSCAN clustering did a poor job are rejected for (possible) re
 
 As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. flasely labeled as flooding.
 
-AUC Score:
+AUC Score: 0.948
+Accuracy: 0.875  (random chance yielded 0.357)
+*note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
-IMAGE HERE OF Precision-Recall CURVE AND model PREDICTION
+<p align="center">
+<img src="images/XGBoost Precision-Recall Curve.png" alt="XGBoost AUC" width="400">
+</p>
+
+<p align="center">
+<img src="images/XGBoost_wide.png" alt="Baseline XGBoost prediction" width="600">
+</p>
+
+As you can see, the baseline model does relatively well with the flooding along the left side, but struggles with most of the rest, and has a high rate of false positives on rooftops, sides of roads, etc.
 
 ## U-Net Model
 
-While not the only possibility, a U-Net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Transfer learning is not really an option as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering to reduce the affect of shadows, etc.  After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
+While not the only possibility for Deep Learning Semantic Segmentation, a U-Net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Unlike many image classification problems, transfer learning is not really an option here as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering to reduce the affect of shadows, etc or the eventual possibilty of adding in altitude maps, etc.  
 
-F1/Dice Score = 0.89
+After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
 
 AUC = 0.94
-*note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against*
+F1/Dice Score = 0.89
+Accuracy: 0.875  (random chance yielded 0.357)
+*note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
 IMAGE OF PRECISION-RECALL CURVE
 
