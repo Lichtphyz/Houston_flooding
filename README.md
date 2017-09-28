@@ -7,29 +7,33 @@
 
 *Note: This page is a work in progess, but much better than what was previously here.  I expect to upload most of the missing images and information by Thursday afternoon.*
 
-This repo contains a series of notebooks which made up the core steps of a 3-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.  It is also quite likely that I will be continuing to work on this project from time to time, so check back to see if I have added anything.
+This repo contains a series of notebooks which made up the core steps of a 3.5-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.  It is also likely that I will be continuing to work on this project here and there, so check back to see if I have added anything.
 
 ## Background:
-This project was started as part of the [Metis/DigitalGlobe Data Challenge](http://deepcore.io/2017/06/06/Metis_Project.html) but when DigitalGlobe released a substanial dataset of the areas just hit by Hurricane Harvey (through it's [Open Data Program](https://www.digitalglobe.com/opendata)) the project quickly evolved into something more immediately relevent, but with data in less-pre-proceed state than the SpaceNet dataset I had been planning on working with.  
+This project was started as part of the [Metis/DigitalGlobe Data Challenge](http://deepcore.io/2017/06/06/Metis_Project.html) but, when DigitalGlobe released a substanial dataset of the areas just hit by Hurricane Harvey (through it's [Open Data Program](https://www.digitalglobe.com/opendata)) the project quickly evolved into something more immediately relevent, but utilizing a dataset in a less clean state than the SpaceNet dataset I had been planning on working with.  
 
 ## Goal:  
-A goal was set to built a model which (once trained) could quickly examine satillite imagry of an area, and create a 'mask' labeling each pixel as either flooded or not (and assign a likelihood of being flooded to each pixel).  This is an [image segmentation](https://en.wikipedia.org/wiki/Image_segmentation) problem.  Though it is unusal as both a before and after picture of the area will be fed to the model, to help label/segment the post-flood image.
+A goal was set to built a model which (once trained) could quickly examine satillite imagry of an area, and create a 'mask' labeling each pixel as either flooded or not (actually it assigns a likelihood of being flooded to each pixel, and a cutoff threshold is set, say P>0.50).  This is an [image segmentation](https://en.wikipedia.org/wiki/Image_segmentation) problem, more specifically **semantic segmentation** where the goal is to identify all of a partilar class.  Though it is unusal in that both a before and after picture of the area will be fed to the model, to help label/segment the post-flood image.
 
-Additionally, to be useful the model will really need to be able to predict over a wide area to be able to generate the type of large-scale flood extent maps which would be useful to disaster response or recover efforts.
+<p align="center">
+<img src="images/Segmentation_idea.jpg" alt="Semantic Segmentation Example">
+</p>
 
-IMAGE SEGMENTATION EXAMPLE PIC HERE
+Additionally, to be useful the model will really need to be able to predict over a wide area to be able to generate the type of large-scale flood extent maps which would be useful to disaster response or recovery efforts.
 
 ## Image Data
-The post-storm satillite images I used for this project were primarily taken on October 31st, 2017 and can be found on DigitalGlobe's Open Data Program page for [Hurricane Harvey](https://www.digitalglobe.com/opendata/hurricane-harvey/post-event).  As time has progressed more images have been added to the website, so what is there now is significantly more than what was available when I started; though the first images released were also amoung the best.  Each .geotiff file is 1.2 Gb in size, covers an area roughly 10x10km, are 20000x20000 pixels across in uncompressed 8-bit 3-color (Digital Globe internally uses Multispectral 8-band images, but those are rarely released to the public).
+The post-storm satillite images I used for this project were primarily taken on October 31st, 2017 and can be found on DigitalGlobe's Open Data Program page for [Hurricane Harvey](https://www.digitalglobe.com/opendata/hurricane-harvey/post-event).  As time has progressed more images have been added to the website, so what is there now is significantly more than what was available when I started; though the first images released were also amoung the best.  Each .geotiff file is 1.2 Gb in size, covers an area roughly 10x10km, are 20000x20000 pixels across in uncompressed 8-bit 3-color (Digital Globe internally uses Multispectral 8-band images, but those are rarely released to the public).  Many of the files are incomplete along the edges of the imaged area, because they represent subset of a much larger swath of the earth which Digital globe has corrected for perspective (affine transformation) before release to make it easier to work with.
 
-EXAMPLE IMAGES, PERHAPS QGIS SCREENSHOT OF THE EXTENT
-
-AND/OR LARGE AREA BEFORE/AFTER PICS
+<p align="center">
+<img src="images/DG Footprint 202131133.png" alt="One DigitalGlobe "Footprint, before and after Hurricane Harvey">
+</p>
 
 ## Building a Training Set
 ### Problem:  No Labeled Training Data!
 
-FARSIDE IMAGE HERE?  NOT TOO BIG
+<p align="center">
+<img src="images/Far Side Cartoon Labels.jpg" alt="Need some data labels" width="300">
+</p>
 
 The closest thing to a set of "ground truth" labels for the Houston Area post-flooding was a RADARSAT-2 (radar) difference map flagging the areas most changed after the storm.  Unfortunately, the resolution of this map is several times lower than the DigitalGlobe data, and more importantly it has quite a large number of false positives (such as construction sites, deforestation, large warehouses, etc. where there was a lot of change in ground-cover) and missed many areas of flooding a well.
 
@@ -99,11 +103,13 @@ This next one is particularly interesting to me because you can see the 'ghost o
 
 ## Possible Next Steps
 
+- I would love to pull in another dataset as a feature: perhaps elevation, soil porosity, etc.
 - Subtract known water bodies from model predictions (using Open Street Maps or another source for ground-truth)
 - Continue labeling more training data
 - Re-balance training data set to overweigh examples of uncommon and high importance flooding appearances
 - Get true per-pixel labeling done (at least on a subset of images)
   * would require additional software/training, or employing a professional photoshop artist, would be expenive and/or time consuming
+- Impliment a full Active Learning scheme where the model's less confident predictions are scrutenized by a human and a new training example generated if the model got an area wrong.
 - Turn model output from pixel labels into geospacial polygons, allowing overlay on even wider scales or by lat/longitude 
 - Make prediction maps and imagery searchable by lat/longitude (or by street address via GoogleMaps API).
 
