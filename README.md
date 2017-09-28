@@ -41,9 +41,11 @@ EXAMPLE PIC OF SOME HARD PICTURES TO SEGMENT
 
 **The solution to this problem I devised was to have a human being supervise the clustering algorithm**, and select the correct clusters manually when the algorithim didn't get it right.  I wrote a Jupyter notebook (step 03) specifically for the review of DBScan clustering, and the selection of new clusters as needed (about half the time).  Approximately 2000 flooding candiate tiles were labeled this way, about 60% of which we were able to get a good usable "ground truth" mask from (including ~10% tiles with no apparent flooding).  The rest contained clouds, poor clustering (such as selecting rooftops as floodwater), had extensive construction, or someother issue with the image quality.
 
-Images can now be labeled at a rate of about 200 per hour.  The resulting masks are highly accurate (the lack of true ground-truth for comparison prevents me to quantifyting it exactly, but here are a few examples of the process:
+Images can now be labeled at a rate of approximately 200 per hour.  The resulting masks are highly accurate (the lack of true ground-truth for comparison prevents me to quantifyting their precision, but here are a few examples of the process so you can judge for yourself:
 
 EXAMPLE PICS OF THE PROCESS AT WORK, PROBABLY THE ONES I PUT IN THE GOOGLE DOC
+
+Images where the DBSCAN clustering did a poor job are rejected for (possible) revision later.
 
 ## Baseline Model
 
@@ -53,7 +55,9 @@ IMAGE HERE OF AUC CURVE AND PREDICTION
 
 ## U-Net Model
 
-While not the only possibility, a U-net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  It took some experimentation with different data standardization and feature possibilities
+While not the only possibility, a U-net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Transfer learning is not really an option as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering.  It took some experimentation with different data standardization and model features]
+\
+
 
 
 
