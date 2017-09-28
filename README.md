@@ -72,9 +72,9 @@ Images where the DBSCAN clustering did a poor job are rejected for (possible) re
 
 As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. flasely labeled as flooding.
 
-AUC Score: 0.948
-Accuracy: 0.875  (random chance yielded 0.357)
-*note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
+- AUC Score: 0.948
+- Accuracy: 0.875  (random chance yielded 0.357)
+  * *note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
 <p align="center">
 <img src="images/XGBoost Precision-Recall Curve.png" alt="XGBoost AUC" width="400">
@@ -92,10 +92,10 @@ While not the only possibility for Deep Learning Semantic Segmentation, a U-Net 
 
 After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
 
-AUC = 0.94
-F1/Dice Score = 0.89
-Accuracy: 0.875  (random chance yielded 0.357)
-*note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
+- AUC = 0.94
+- F1/Dice Score = 0.89
+- Accuracy: 0.875  (random chance yielded 0.357)
+  * *note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
 IMAGE OF PRECISION-RECALL CURVE
 
@@ -139,7 +139,6 @@ This next one is particularly interesting to me because you can see the 'ghost o
 - Turn model output from pixel labels into geospacial polygons, allowing overlay on even wider scales or by lat/longitude 
 - Make prediction maps and imagery searchable by lat/longitude (or by street address via GoogleMaps API).
 
-## A step by step walkthrough with more technical details can be found [HERE]
 
 ### You can also see more on this project on my [personal Blog](https://lichtphyz.github.io/), and soon a the DigitalGlobe Company Blog and possibly elsewhere!
 
