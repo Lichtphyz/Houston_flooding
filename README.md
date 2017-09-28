@@ -1,8 +1,11 @@
 # Flood Water Detection 
 ### *with A Semi-Supervised U-Net*
+
 <p align="center">
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif" alt="Segmenting Floodwater - on an incomplete image footprint" width="600">
 </p>
+
+*Note: This page is a work in progess, but much better than what was previously here.  I expect to upload most of the missing images and information by Thursday afternoon.*
 
 This repo contains a series of notebooks which made up the core steps of a 3-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.  It is also quite likely that I will be continuing to work on this project from time to time, so check back to see if I have added anything.
 
@@ -90,7 +93,7 @@ Here is a collection of wide-field predictions.  Most are not at full resolution
 
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_MHY2RT_1800.gif">
 
-note: This one is cool, because you can see the 'ghost of the past' in the areas with no post-hurricane imagery, but there was pre-hurricane imagery.  They are evidence that the U-Net model is not just using the post-hurriane images, but also takes the pre-hurricane condidtions into account.
+This next one is particularly interesting to me because you can see the 'ghost of the past' in the areas with no post-hurricane imagery, but there was pre-hurricane imagery.  They are evidence that the U-Net model is not just using the post-hurriane images, but also takes the pre-hurricane condidtions into account.
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif">
 
 
