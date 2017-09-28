@@ -51,21 +51,36 @@ Images where the DBSCAN clustering did a poor job are rejected for (possible) re
 
 As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. flasely labeled as flooding.
 
-IMAGE HERE OF AUC CURVE AND PREDICTION
+AUC Score:
+
+IMAGE HERE OF Precision-Recall CURVE AND model PREDICTION
 
 ## U-Net Model
 
-While not the only possibility, a U-net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Transfer learning is not really an option as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering.  It took some experimentation with different data standardization and model features]
-\
+While not the only possibility, a U-Net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Transfer learning is not really an option as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering to reduce the affect of shadows, etc.  After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
+
+F1/Dice Score = 0.89
+
+AUC = 0.94
+*note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against*
+
+IMAGE OF PRECISION-RECALL CURVE
+
+## Example Model Output
+
+Here are several examples of pre and post-Harvey imagery, and the resulting model prediction of the area:
+
+In this picture we see
+PRE-FLOOD, POST-FLOOD, PREDICTION (OVERLAY??), AND "GROUND TRUTH MASK"
+
+Notice in this one...
+
+Here is one were the model had a hard time with X because of Y
 
 
 
 
-
-
-
-
-
+## Wide-field Prediction
 
 
 
