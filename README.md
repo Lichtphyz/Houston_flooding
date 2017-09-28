@@ -81,31 +81,32 @@ Here is one were the model had a hard time with X because of Y
 
 
 ## Wide-field Prediction
+Lastly, in order to achieve the goal of predicting over a wide area, I made a routine which takes a full 10km^2 DigitalGlobe footprint file (pair actually, before and after), slices it into 512x512 pixel tiles, predicts on each of those tiles, and then stitches the results back together into a single 0 to 1 likelihood mosaic of the entire area.  If you take likelihood values over some threshold (say 0.50) to be considered flooded, then you have a pixel-level labeling of the entire large-scale footprint.  
 
-
-
-
-
-I explain more about the important steps and workflow here:
-
-*Note, the files currently posted are a portion of a work in progress, but are fairly representative of such.  I have not gone back and cleaned up my code at all, at least not yet* 
-
-**Step 03** in particularly notable as it is a semi-supervised data labeling routine.  (Step 04 was removal of known water bodies from the training masks, but this was cut from the final product before completion, as it would be better (and easier) applied AFTER model prediction on an entire mosaic.  This feature has not yet been implimented, but could be if there was interest.)  Step 05b is a comparison with a 'baseline' XGBoost model.
-
-
-
-
-
-
-### You can also see more on this project on my personal Blog, and likely soon on the DigitalGlobe Company Blog and possibly elsewhere!
-
-Here's a couple of teaser images from the working model:
-
-(this one is cool, because you can see the 'ghost of the past' in the areas with no post-hurricane imagery, but there was pre-hurricane imagery.  They are evidence that the U-Net model is not just using the post-hurriane images, but also takes the pre-hurricane condidtions into account.
-<img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif">
+Here is a collection of wide-field predictions.  Most are not at full resolution because the files would be excessively large and the animated .gif creator I am using can't handle resolutions that high.
 
 
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_AtJBwz_3_3_1800.gif">
 
-
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_MHY2RT_1800.gif">
+
+note: This one is cool, because you can see the 'ghost of the past' in the areas with no post-hurricane imagery, but there was pre-hurricane imagery.  They are evidence that the U-Net model is not just using the post-hurriane images, but also takes the pre-hurricane condidtions into account.
+<img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif">
+
+
+## Possible Next Steps
+
+- Subtract known water bodies from model predictions (using Open Street Maps or another source for ground-truth)
+- Continue labeling more training data
+- Re-balance training data set to overweigh examples of uncommon and high importance flooding appearances
+- Get true per-pixel labeling done (at least on a subset of images)
+  * would require additional software/training, or employing a professional photoshop artist, would be expenive and/or time consuming
+- Turn model output from pixel labels into geospacial polygons, allowing overlay on even wider scales or by lat/longitude 
+- Make prediction maps and imagery searchable by lat/longitude (or by street address via GoogleMaps API).
+
+## A step by step walkthrough with more technical details can be found [HERE]
+
+### You can also see more on this project on my [personal Blog](https://lichtphyz.github.io/), and soon a the DigitalGlobe Company Blog and possibly elsewhere!
+
+
+
