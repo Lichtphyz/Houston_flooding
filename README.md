@@ -35,14 +35,24 @@ The post-storm satillite images I used for this project were primarily taken on 
 <img src="images/Far Side Cartoon Labels.jpg" alt="Need some data labels" width="300">
 </p>
 
-The closest thing to a set of "ground truth" labels for the Houston Area post-flooding was a RADARSAT-2 (radar) difference map flagging the areas most changed after the storm.  Unfortunately, the resolution of this map is several times lower than the DigitalGlobe data, and more importantly it has quite a large number of false positives (such as construction sites, deforestation, large warehouses, etc. where there was a lot of change in ground-cover) and missed many areas of flooding a well.
+The closest thing to a set of "ground truth" labels for the Houston Area post-flooding was a RADARSAT-2 (radar) difference map flagging the areas most changed after the storm (see below).  Unfortunately, the resolution of this map is several times lower than the DigitalGlobe data, and more importantly it has quite a large number of false positives (such as construction sites, deforestation, large warehouses, etc. where there was a lot of change in ground-cover) and missed many areas of flooding a well.
 
-This map is not sufficiently accurate or precise to use to train my segmentation model.  But it would allow me to restrict a search for flooded ground imagery to a much smaller subset of the imaged area (about 1/30th of the whole set, the majority of which were flooded).  
+<p align="center">
+<img src="http://www.asc-csa.gc.ca/images/recherche/tiles/dc5a4beb-98c1-4f34-945f-a86ab18840b1.jpg" alt="The flooded areas of Houston following Hurricane Harvey, as shown by RADARSAT-2" width="500">
+</p>
+
+Unfortunately, this map is not sufficiently accurate or precise to use to train my segmentation model (see examples below).  But it would allow me to restrict a search for flooded ground imagery to a much smaller subset of the imaged area (about 1/30th of the whole DigitalGlobe set, and the majority of this subset were indeed flooded).
 
 ### Solution:  Unsupervised clustering of image pixels with Human cluster verification/adjustment
 #### A.K.A. Semi-Supervised Learning
 
-Due to the relatively uniform appearance of floodwater, the potential existed for using unsupervised segmentation/clustering techniques to identify flooded pixels in an image.  I choose DBScan has my clustering algorithm of choice, because it is not biased towards any particular number of clusters, and I could tune it by setting a distance in color-space.  This works very well when an image is mostly flooded, and all the floodwater is roughtly the same color.  The tricky part is when there are multiple colors of floodwater near eachother, and when non-water objects are present with similar colors to the flooding.  A routine was written to examine color ratios and select the most common cluster which wasn't too white/grey/black or too dark green.  Unfortunately, this type of simple algorithm isn't smart enough to avoid labeling dead grass, rooftops, dirty roads, and many other surfaces as flooded if they happen to be a bit close to the color of Texas floodwater (and thanks to using local minerals for roofing tiles, many of them are), it is also not smart enough to know if there are multiple colors of floodwater in the same image.
+Due to the relatively uniform appearance of floodwater, the potential existed for using unsupervised segmentation/clustering techniques to identify flooded pixels in an image.  I choose DBScan has my clustering algorithm of choice.  This is because it is not biased towards any particular number of clusters (which is important as the images vary from nearly featureless floodwater, to highly complex urban landscapes), and I could tune it by setting a distance in color-space, and even bring in pixel location as a feature of I wished.
+
+<img src="images/9a.png" alt="tile Before and After">
+<img src="images/9b.png" alt="tile MDA and DBScan Clusters">
+<img src="images/9c.png" alt="Mask produced, and verification on post-flood imagery">
+
+The unsupervised DBScan model works very well when an image is mostly flooded, and all the floodwater is roughtly the same color.  The tricky part is when there are multiple colors of floodwater near eachother, and when non-water objects are present with similar colors to the flooding.  A routine was written to examine color ratios and select the most common cluster which wasn't too white/grey/black or too dark green.  Unfortunately, this type of simple algorithm isn't smart enough to avoid labeling dead grass, rooftops, dirty roads, and many other surfaces as flooded if they happen to be a bit close to the color of Texas floodwater (and thanks to using local minerals for roofing tiles, many of them are), it is also not smart enough to know if there are multiple colors of floodwater in the same image.
 
 EXAMPLE PIC OF SOME HARD PICTURES TO SEGMENT
 
