@@ -84,25 +84,24 @@ After some experimentation with different data standardizations and model featur
   * *note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, or possibly worse, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
 <p align="center">
-<img src="images/U-Net ROC Curve.png" alt="U-Net ROC curve">
+<img src="images/U-Net ROC Curve.png" alt="U-Net ROC curve" width="400">
 </p>
 
 ## Example Model Output
 
-Here are several examples of post-Harvey imagery, and the resulting model prediction of the area:
+Here are several examples of post-Harvey imagery, and the resulting model prediction of the area.  These are all images from the 'test' side of the 80/20 train/test split:
 
 <p align="center">
-<img src="images/output1.png" alt="example1" width="400"> <img src="images/output194.png" alt="example2" width="400">
+<img src="images/output1.png" alt="example1" width="400">    <img src="images/output220.png" alt="example2" width="400">
 </p>
 
 <p align="center">
-<img src="images/output231.png" alt="example1" width="400"> <img src="images/output172.png" alt="example2" width="400">
+<img src="images/output231.png" alt="example3" width="400">    <img src="images/output172.png" alt="example4" width="400">
 </p>
 
 <p align="center">
-<img src="images/output191.png" alt="example1" width="400"> <img src="images/output_dry0.png" alt="example2" width="400">
+<img src="images/output191.png" alt="example5" width="400">    <img src="images/output_dry0.png" alt="example6" width="400">
 </p>
-output172.png
 
 ## Wide-field Prediction
 Lastly, in order to achieve the goal of predicting over a wide area, I made a routine which takes a full 10km^2 DigitalGlobe footprint file (pair actually, before and after), slices it into 512x512 pixel tiles, predicts on each of those tiles, and then stitches the results back together into a single 0 to 1 likelihood mosaic of the entire area.  If you take likelihood values over some threshold (say 0.50) to be considered flooded, then you have a pixel-level labeling of the entire large-scale footprint.  
@@ -120,10 +119,11 @@ This next one is particularly interesting to me because you can see the 'ghost o
 
 ## Possible Next Steps
 
+- Re-balance or suppliment the training data set to overweigh examples of uncommon and high importance flooding appearances
 - I would love to pull in another dataset as a feature: perhaps elevation, soil porosity, etc.
+- Predict/test on flooding outside of Texas
 - Subtract known water bodies from model predictions (using Open Street Maps or another source for ground-truth)
 - Continue labeling more training data
-- Re-balance training data set to overweigh examples of uncommon and high importance flooding appearances
 - Get true per-pixel labeling done (at least on a subset of images)
   * would require additional software/training, or employing a professional photoshop artist, would be expenive and/or time consuming
 - Impliment a full Active Learning scheme where the model's less confident predictions are scrutenized by a human and a new training example generated if the model got an area wrong.
