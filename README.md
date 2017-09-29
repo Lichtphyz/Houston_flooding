@@ -70,34 +70,39 @@ Images where the DBSCAN clustering did a poor job are rejected for (possible) re
 
 ## Baseline Model
 
-As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  The baseline model did relatively well with light brown flooding, but struggles with most of the rest, and has a high rate of false positives on rooftops, sides of roads, etc.
+As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  The baseline model did relatively well with light brown flooding, but struggles with most of the rest, and has a very high rate of false positives on rooftops, sides of roads, etc (basically everything brown).
 
 ## U-Net Model
 
 While not the only possibility for Deep Learning Semantic Segmentation, a U-Net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Unlike many image classification problems, transfer learning is not really an option here as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering to reduce the affect of shadows, etc or the eventual possibilty of adding in altitude maps, etc.  
 
-After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
+After some experimentation with different data standardizations and model features the U-Net model is working well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark blue/grey flood water, near certain types of buildings, etc.).  To improve, the model will need more examples of these types to train on, unban environments were of course much less common to be found flooded, and are more difficult for unsupervised labeling, so they are unfortunately underrepresented in the training set at this time.
 
-- AUC = 0.939
+- AUC = 0.942
 - F1/Dice Score = 0.89
-- Accuracy: 0.846  (random chance yielded 0.357)
-  * *note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
+- Accuracy: 0.83  (random chance yields 0.36)
+  * *note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, or possibly worse, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
-IMAGE OF PRECISION-RECALL CURVE
+<p align="center">
+<img src="images/U-Net ROC Curve.png" alt="U-Net ROC curve">
+</p>
 
 ## Example Model Output
 
-Here are several examples of pre and post-Harvey imagery, and the resulting model prediction of the area:
+Here are several examples of post-Harvey imagery, and the resulting model prediction of the area:
 
-In this picture we see
-PRE-FLOOD, POST-FLOOD, PREDICTION (OVERLAY??), AND "GROUND TRUTH MASK"
+<p align="center">
+<img src="images/output1.png" alt="example1" width="400"> <img src="images/output194.png" alt="example2" width="400">
+</p>
 
-Notice in this one...
+<p align="center">
+<img src="images/output231.png" alt="example1" width="400"> <img src="images/output172.png" alt="example2" width="400">
+</p>
 
-Here is one were the model had a hard time with X because of Y
-
-
-
+<p align="center">
+<img src="images/output191.png" alt="example1" width="400"> <img src="images/output_dry0.png" alt="example2" width="400">
+</p>
+output172.png
 
 ## Wide-field Prediction
 Lastly, in order to achieve the goal of predicting over a wide area, I made a routine which takes a full 10km^2 DigitalGlobe footprint file (pair actually, before and after), slices it into 512x512 pixel tiles, predicts on each of those tiles, and then stitches the results back together into a single 0 to 1 likelihood mosaic of the entire area.  If you take likelihood values over some threshold (say 0.50) to be considered flooded, then you have a pixel-level labeling of the entire large-scale footprint.  
