@@ -70,21 +70,7 @@ Images where the DBSCAN clustering did a poor job are rejected for (possible) re
 
 ## Baseline Model
 
-As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  As you can see it did moderately well at classifying one shade of floodwater, but misses most of the rest, and has quite a lot of rooftops, etc. flasely labeled as flooding.
-
-- AUC Score: 0.948
-- Accuracy: 0.875  (random chance yielded 0.357)
-  * *note, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
-
-<p align="center">
-<img src="images/XGBoost Precision-Recall Curve.png" alt="XGBoost AUC" width="400">
-</p>
-
-<p align="center">
-<img src="images/XGBoost_wide.png" alt="Baseline XGBoost prediction" width="600">
-</p>
-
-As you can see, the baseline model does relatively well with the flooding along the left side, but struggles with most of the rest, and has a high rate of false positives on rooftops, sides of roads, etc.
+As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  The baseline model did relatively well with light brown flooding, but struggles with most of the rest, and has a high rate of false positives on rooftops, sides of roads, etc.
 
 ## U-Net Model
 
@@ -92,9 +78,9 @@ While not the only possibility for Deep Learning Semantic Segmentation, a U-Net 
 
 After some experimentation with different data standardizations and model features the U-Net model is working extremely well.  Quite often the model predictions look better than the verified DBScan 'ground truth' masks, but there are still a few areas where the model has trouble; primarily in areas with less common flooding appearances.  I believe this is due to there being less goog example of these types to train on (very dark flood water, near certain types of buildings, etc.).
 
-- AUC = 0.94
+- AUC = 0.939
 - F1/Dice Score = 0.89
-- Accuracy: 0.875  (random chance yielded 0.357)
+- Accuracy: 0.846  (random chance yielded 0.357)
   * *note, again, these scores must be taken with with severals grains of salt, as the it is only relative to the training data I fed the model, which was not perfect.  A perfectly segmented image would not score very much higher, because of flaws in the training data the measurements are taken against.  I am merely including them for completeness.*
 
 IMAGE OF PRECISION-RECALL CURVE
