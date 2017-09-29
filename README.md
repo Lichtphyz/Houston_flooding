@@ -68,10 +68,6 @@ Images can now be labeled at a rate of approximately 200 per hour.  The resultin
 
 Images where the DBSCAN clustering did a poor job are rejected for (possible) revision later.
 
-## Baseline Model
-
-As a baseline employed XGBoost to attempt to classify each pixel as flood water.  I gave it the same features I later gave to my U-Net model, but was forced to treat each pixel individually.  As such, this model (and most other standard machine learning algorithms) is not capable of using any information beyond the color of a pixel before and after the flooding occured.  The baseline model did relatively well with light brown flooding, but struggles with most of the rest, and has a very high rate of false positives on rooftops, sides of roads, etc (basically everything brown).
-
 ## U-Net Model
 
 While not the only possibility for Deep Learning Semantic Segmentation, a U-Net was selected as they are known to be good at image detection and segmentation problems, and train relatively quickly.  Unlike many image classification problems, transfer learning is not really an option here as we are dealing with two image timeframes as input, and I would like the freedom to do some feature engineering to reduce the affect of shadows, etc or the eventual possibilty of adding in altitude maps, etc.  
