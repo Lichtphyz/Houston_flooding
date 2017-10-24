@@ -5,7 +5,7 @@
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif" alt="Segmenting Floodwater - on an incomplete image footprint" width="600">
 </p>
 
-*Note: This page is a work in progess, but much better than what was previously here.  I expect to upload most of the missing images and information by Thursday afternoon.*
+*[UPDATE: added example image of model prediction in Puerto Rico]
 
 This repo contains a series of notebooks which made up the core steps of a 3.5-week project I recently conducted (and presented) at Metis SF in collaboration with DigitalGlobe.  You can find my [presentation slides here](https://docs.google.com/presentation/d/e/2PACX-1vQL4lvBRuwTnkPMcWgemC2gNoN51SNeYtfwQ4IiaP9jh20XWwRdVU7EMRi4_Et_-0ukVCt8l6Ogbp1K/pub?start=false&loop=false&delayms=3000) or you can read on for a more detailed description of the project.  It is also likely that I will be continuing to work on this project here and there, so check back to see if I have added anything.
 
@@ -112,12 +112,17 @@ Here is a collection of wide-field predictions.  Most are not at full resolution
 This next one is particularly interesting to me because you can see the 'ghost of the past' in the areas with no post-hurricane imagery, but there was pre-hurricane imagery.  They are evidence that the U-Net model is not just using the post-hurriane images, but also takes the pre-hurricane condidtions into account.
 <img src="https://github.com/Lichtphyz/Lichtphyz.github.io/blob/master/images/output_Hm6IJy_low_res.gif">
 
+-------------------------------------------------------------------------------------------------------------
+## Predict in Puerto Rico:
+Hurricane Maria did a lot of damage to Puerto Rico not long after Hurricane Harvey hit, some of that damage includes flooding, primarily near the center of the island.  Unfortunately Digital Globe did not happen to image those areas, but I was able to find a small patch of flooding along the coast east of San Juan.  The image below is that region.  The fit is quite good despite being in a different region than the training set.  It remains to be seen how well the model would preform in a region with significantly different geology or climate.
+<img src="https://lichtphyz.github.io/images/PuertoRico3window.png">
+
 
 ## Possible Next Steps
 
 - Re-balance or suppliment the training data set to overweigh examples of uncommon and high importance flooding appearances
 - I would love to pull in another dataset as a feature: perhaps elevation, soil porosity, etc.
-- Predict/test on flooding outside of Texas
+- Predict/test on flooding outside of Texas [UPDATE, see above for one example]
 - Subtract known water bodies from model predictions (using Open Street Maps or another source for ground-truth)
 - Continue labeling more training data
 - Get true per-pixel labeling done (at least on a subset of images)
